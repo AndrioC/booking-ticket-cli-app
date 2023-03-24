@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"time"
+	"fmt"
+)
 
 const conferenceTickets = 50
 var conferenceName = "Go Conference"
@@ -19,7 +22,7 @@ func main(){
 	greetUsers()
 
 	for {
-		//getting user input values
+		//get user input values
 		firstName, lastName, email, userTickets := getUserInput()
 		
 		//user input validation
@@ -28,8 +31,9 @@ func main(){
 		if isValidName && isValidEmail && isValidTicketNumber {
 			
 			bookTicket(userTickets, firstName, lastName, email)
+			go sendTicket(userTickets, firstName, lastName, email)
 
-			//getting only the first name from users
+			//get only the first name from users
 			firstNames := getFirstNames()
 			fmt.Printf("The first anem of bookigs are: %v\n", firstNames)
 
@@ -94,7 +98,7 @@ func getUserInput() (string, string, string, uint){
 func bookTicket(userTickets uint, firstName string, lastName string, email string){
 	remainingTickets = remainingTickets - userTickets
 
-	//create a map for a user
+	//add values to the struct
 	var userData = UserData {
 		firstName: firstName,
 		lastName: lastName,
@@ -107,4 +111,13 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+}
+
+//simulate send email to the user after get a ticket
+func sendTicket(userTickets uint, firstName string, lastName string, email string){
+	time.Sleep(10 * time.Second)
+	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	fmt.Println("#############")
+	fmt.Printf("Sending ticket:\n %v to email address %v\n", ticket, email)
+	fmt.Println("#############")
 }
